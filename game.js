@@ -36,8 +36,8 @@ window.addEventListener('resize', resizeCanvas);
 const player = {
     worldX: 0,
     worldY: 0, 
-    width: 120,
-    height: 120,
+    width: 200,
+    height: 200,
     speed: 5,
     
     // ANIMATIE VARIABELEN
