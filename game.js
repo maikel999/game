@@ -89,18 +89,11 @@ function update() {
     let newX = player.worldX;
     let newY = player.worldY;
 
-    if (keys.w) {
-        newY -= player.speed;
-    }
-    if (keys.s) {
-        newY += player.speed;
-    }
-    if (keys.a) {
-        newX -= player.speed;
-    }
-    if (keys.d) {
-        newX += player.speed;
-    }
+    // Gebruik de joystick input in plaats van de keys state
+    // De inputX/Y is al tussen -1.0 en 1.0, perfect voor de snelheid.
+    newX += joystick.inputX * player.speed;
+    newY += joystick.inputY * player.speed;
+    
 
     // Houd de speler binnen de wereldgrenzen
     // Linkerbovenhoek is (0, 0), Rechterbenedenhoek is (worldSize, worldSize)
@@ -109,6 +102,7 @@ function update() {
 
     player.worldX = Math.max(halfWidth, Math.min(newX, worldSize - halfWidth));
     player.worldY = Math.max(halfHeight, Math.min(newY, worldSize - halfHeight));
+    
 }
 
 /**
