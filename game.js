@@ -29,16 +29,16 @@ const player = {
 const worldSize = 3000; // Wereldgrootte van 3000x3000
 
 // --- Joystick Setup (Harde Waarden) ---
-const JOYSTICK_MARGIN = 50; 
-const JOYSTICK_BASE_RADIUS = 90; 
+const JOYSTICK_MARGIN = 150; 
+const JOYSTICK_BASE_RADIUS = 120; 
 const JOYSTICK_LIMIT = 50; 
 
 const joystick = {
     active: false,
     inputX: 0, 
     inputY: 0, 
-    stickOffsetX: 30, 
-    stickOffsetY: 30, 
+    stickOffsetX: 0, 
+    stickOffsetY: 0, 
     
     // De statische basispositie (X is constant, Y hangt af van canvas.height)
     baseX: JOYSTICK_MARGIN + JOYSTICK_BASE_RADIUS,
