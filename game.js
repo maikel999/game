@@ -169,16 +169,20 @@ function draw() {
 
     // --- 4.6. TEKEN DE STATISCHE UI (Joystick) ---
     // Dit wordt NIET beïnvloed door de camera offset.
+    const margin = 50; // Nieuwe marge van de kant
+    const baseRadius = 90; // Nieuwe, grotere straal
     
-    const stickX = 100;
-    const stickY = canvas.height - 100;
-
+    // De linker-onderhoek is:
+    const stickX = margin + baseRadius; 
+    const stickY = canvas.height - margin - baseRadius;
+    
     // Joystick basis (buitenste cirkel)
     ctx.fillStyle = 'rgba(150, 150, 150, 0.4)';
     ctx.beginPath();
-    ctx.arc(stickX, stickY, 70, 0, Math.PI * 2);
+    // Gebruik de nieuwe variabelen:
+    ctx.arc(stickX, stickY, baseRadius, 0, Math.PI * 2);
     ctx.fill();
-
+    
     // Richting indicator (voor WASD)
     let stickOffsetX = (keys.d - keys.a) * 30;
     let stickOffsetY = (keys.s - keys.w) * 30;
