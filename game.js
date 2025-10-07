@@ -18,6 +18,7 @@ let playerSprites = {
 // Stel de bronbestanden in (Zorg dat de namen EXACT overeenkomen!)
 playerSprites.walk.src = 'images/Swordsman_lvl1_Walk_with_shadow.png';
 playerSprites.run.src = 'images/Swordsman_lvl1_Run_with_shadow.png';
+playerSprites.idle.src = 'images/Swordsman_lvl1_Idle_with_shadow.png';
 
 // --- Canvas Resizing ---
 function resizeCanvas() {
