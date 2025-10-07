@@ -16,22 +16,22 @@ canvas.height = WORLD_HEIGHT;
 // --- ASSET CONFIGURATIE (DIT MOET JE AANPASSEN VOOR NIEUWE OBJECTEN) ---
 const ASSET_CONFIG = [
     // Achtergrond (Wordt getegeld in de draw functie)
-    { type: 'background', path: 'images/tile_grass.png', category: 'tile', default_size: TILE_SIZE },
+    { type: 'background', path: '../images/tile_grass.png', category: 'tile', default_size: TILE_SIZE },
 
     // Muren (Collision Objecten)
-    { type: 'wall_h', path: 'images/Wooden_Fence_Horizontal.png', category: 'wall', default_size: TILE_SIZE },
-    { type: 'wall_v', path: 'images/Wooden_Fence_Vertical.png', category: 'wall', default_size: TILE_SIZE },
+    { type: 'wall_h', path: '../images/Wooden_Fence_Horizontal.png', category: 'wall', default_size: TILE_SIZE },
+    { type: 'wall_v', path: '../images/Wooden_Fence_Vertical.png', category: 'wall', default_size: TILE_SIZE },
 
     // Decoratie (Geen Collision, tenzij je dat later toevoegt)
-    { type: 'tree_small', path: 'images/Tree_Small.png', category: 'decoration', default_size: TILE_SIZE },
-    { type: 'tree_medium', path: 'images/Tree_Medium.png', category: 'decoration', default_size: TILE_SIZE },
-    { type: 'tree_large', path: 'images/Tree_Large.png', category: 'decoration', default_size: TILE_SIZE * 2 }, // Dubbele grootte voor large tree
+    { type: 'tree_small', path: '../images/Tree_Small.png', category: 'decoration', default_size: TILE_SIZE },
+    { type: 'tree_medium', path: '../images/Tree_Medium.png', category: 'decoration', default_size: TILE_SIZE },
+    { type: 'tree_large', path: '../images/Tree_Large.png', category: 'decoration', default_size: TILE_SIZE * 2 }, // Dubbele grootte voor large tree
 
     // Speciale objecten
-    { type: 'spawn', path: 'images/tile_spawn.png', category: 'special', default_size: TILE_SIZE * 2 },
-    { type: 'item', path: 'images/tile_item.png', category: 'item', default_size: TILE_SIZE },
+    { type: 'spawn', path: '../images/tile_spawn.png', category: 'special', default_size: TILE_SIZE * 2 },
+    { type: 'item', path: '../images/tile_item.png', category: 'item', default_size: TILE_SIZE },
 
-    { type: 'rock_large', path: 'images/rock_large.png', category: 'decoration', default_size: TILE_SIZE },
+   // { type: 'rock_large', path: 'images/rock_large.png', category: 'decoration', default_size: TILE_SIZE },
     
 ];
 
