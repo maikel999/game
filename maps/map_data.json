@@ -1,1 +1,100 @@
-
+[
+  {
+    "type": "wall",
+    "x": 267,
+    "y": 752,
+    "width": 100,
+    "height": 20
+  },
+  {
+    "type": "wall",
+    "x": 623,
+    "y": 737,
+    "width": 100,
+    "height": 20
+  },
+  {
+    "type": "wall",
+    "x": 888,
+    "y": 777,
+    "width": 100,
+    "height": 20
+  },
+  {
+    "type": "wall",
+    "x": 177,
+    "y": 112,
+    "width": 100,
+    "height": 20
+  },
+  {
+    "type": "wall",
+    "x": 493,
+    "y": 128,
+    "width": 100,
+    "height": 20
+  },
+  {
+    "type": "wall",
+    "x": 847,
+    "y": 201,
+    "width": 100,
+    "height": 20
+  },
+  {
+    "type": "wall",
+    "x": 847,
+    "y": 201,
+    "width": 100,
+    "height": 20
+  },
+  {
+    "type": "item",
+    "x": 190,
+    "y": 278,
+    "width": 20,
+    "height": 20
+  },
+  {
+    "type": "item",
+    "x": 195,
+    "y": 540,
+    "width": 20,
+    "height": 20
+  },
+  {
+    "type": "item",
+    "x": 572,
+    "y": 301,
+    "width": 20,
+    "height": 20
+  },
+  {
+    "type": "item",
+    "x": 572,
+    "y": 301,
+    "width": 20,
+    "height": 20
+  },
+  {
+    "type": "item",
+    "x": 583,
+    "y": 548,
+    "width": 20,
+    "height": 20
+  },
+  {
+    "type": "item",
+    "x": 854,
+    "y": 521,
+    "width": 20,
+    "height": 20
+  },
+  {
+    "type": "spawn",
+    "x": 571,
+    "y": 435,
+    "width": 40,
+    "height": 40
+  }
+]
