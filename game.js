@@ -37,8 +37,8 @@ const joystick = {
     active: false,
     inputX: 0, 
     inputY: 0, 
-    stickOffsetX: 0, 
-    stickOffsetY: 0, 
+    stickOffsetX: 30, 
+    stickOffsetY: 30, 
     
     // De statische basispositie (X is constant, Y hangt af van canvas.height)
     baseX: JOYSTICK_MARGIN + JOYSTICK_BASE_RADIUS,
