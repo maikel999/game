@@ -9,7 +9,6 @@ function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
-// Start en pas de grootte aan bij verandering van venster
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
@@ -24,26 +23,26 @@ const player = {
     worldY: 500,
     width: 40,
     height: 40,
-    speed: 5 // Spelersnelheid
+    speed: 5 
 };
 
 const worldSize = 3000; // Wereldgrootte van 3000x3000
 
-// --- Joystick Setup ---
-const JOYSTICK_MARGIN = 50; // Afstand van de randen
-const JOYSTICK_BASE_RADIUS = 90; // Grootte van de buitenste cirkel
-const JOYSTICK_LIMIT = 50; // Maximale uitslag van de knop
+// --- Joystick Setup (Harde Waarden) ---
+const JOYSTICK_MARGIN = 50; 
+const JOYSTICK_BASE_RADIUS = 90; 
+const JOYSTICK_LIMIT = 50; 
 
 const joystick = {
     active: false,
-    inputX: 0, // Richting op X-as (-1.0 tot 1.0)
-    inputY: 0, // Richting op Y-as (-1.0 tot 1.0)
-    stickOffsetX: 0, // Huidige positie van de knop X
-    stickOffsetY: 0, // Huidige positie van de knop Y
+    inputX: 0, 
+    inputY: 0, 
+    stickOffsetX: 0, 
+    stickOffsetY: 0, 
     
-    // De statische basispositie van de joystick (wordt berekend bij draw/input)
+    // De statische basispositie (X is constant, Y hangt af van canvas.height)
     baseX: JOYSTICK_MARGIN + JOYSTICK_BASE_RADIUS,
-    baseY: 0 // Moet dynamisch worden ingesteld op basis van canvas.height
+    baseY: 0 
 };
 
 
@@ -52,13 +51,13 @@ const joystick = {
 // ======================================================================
 
 function handleInput(e) {
-    e.preventDefault(); // Voorkom standaard browseracties zoals scrollen
+    e.preventDefault(); 
 
     // Bepaal de muis/touch positie op het scherm
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
     
-    // Stel de basis Y-positie van de joystick in (nodig omdat canvas.height verandert)
+    // Update de basis Y-positie (als het scherm groter/kleiner wordt)
     joystick.baseY = canvas.height - (JOYSTICK_MARGIN + JOYSTICK_BASE_RADIUS);
 
     // Bepaal of we net begonnen zijn met interactie (mousedown of touchstart)
@@ -81,21 +80,23 @@ function handleInput(e) {
         // Beperk de afstand tot de ingestelde limiet
         const magnitude = Math.sqrt(deltaX ** 2 + deltaY ** 2);
         if (magnitude > JOYSTICK_LIMIT) {
+            // Pas deltaX en deltaY aan zodat de knop binnen de limiet blijft
             deltaX *= JOYSTICK_LIMIT / magnitude;
             deltaY *= JOYSTICK_LIMIT / magnitude;
         }
 
-        // Sla de offsets op voor het tekenen
+        // Sla de offsets op voor het tekenen (visuele knop)
         joystick.stickOffsetX = deltaX;
         joystick.stickOffsetY = deltaY;
         
-        // Sla de genormaliseerde input op (-1.0 tot 1.0) voor de update-functie
+        // Sla de genormaliseerde input op (-1.0 tot 1.0) voor de beweging
         joystick.inputX = deltaX / JOYSTICK_LIMIT;
         joystick.inputY = deltaY / JOYSTICK_LIMIT;
     }
 }
 
 function handleEnd() {
+    // Reset de joystick state als de vinger/muis wordt losgelaten
     joystick.active = false;
     joystick.inputX = 0;
     joystick.inputY = 0;
@@ -103,9 +104,8 @@ function handleEnd() {
     joystick.stickOffsetY = 0;
 }
 
-// Event Listeners voor zowel muis als touch
+// Event Listeners voor zowel muis (desktop) als touch (mobiel)
 canvas.addEventListener('mousedown', handleInput);
-// Zorg dat 'mousemove' alleen werkt als de muis al is ingedrukt (joystick.active)
 canvas.addEventListener('mousemove', (e) => joystick.active && handleInput(e));
 canvas.addEventListener('mouseup', handleEnd);
 canvas.addEventListener('mouseout', handleEnd); 
@@ -127,11 +127,10 @@ function update() {
     let newY = player.worldY;
 
     // Gebruik de joystick input om de speler te bewegen
-    // Snelheid * genormaliseerde input (tussen -1 en 1)
     newX += joystick.inputX * player.speed;
     newY += joystick.inputY * player.speed;
 
-    // Houd de speler binnen de wereldgrenzen
+    // Houd de speler binnen de wereldgrenzen (eenvoudige botsing met rand)
     const halfWidth = player.width / 2;
     const halfHeight = player.height / 2;
 
@@ -151,17 +150,15 @@ function draw() {
 
 
     // --- 4.3. CAMERA BEREKENING ---
-    // De speler staat in het midden van het scherm. De wereld wordt verschoven.
     const cameraX = player.worldX - (canvas.width / 2);
     const cameraY = player.worldY - (canvas.height / 2);
 
 
     // --- 4.4. TEKEN DE WERELD (met offset) ---
-    // De groene achtergrond is de speelwereld.
     ctx.fillStyle = 'darkgreen';
     ctx.fillRect(
-        0 - cameraX, // Wereld X-coördinaat 0 - camera offset
-        0 - cameraY, // Wereld Y-coördinaat 0 - camera offset
+        0 - cameraX, 
+        0 - cameraY, 
         worldSize,
         worldSize
     );
@@ -188,7 +185,7 @@ function draw() {
 
     // --- 4.6. TEKEN DE STATISCHE UI (Joystick) ---
     
-    // Zorg ervoor dat de tekenpositie overeenkomt met de input basispositie
+    // Coördinaten van de getekende joystick basis
     const stickX = joystick.baseX;
     const stickY = canvas.height - (JOYSTICK_MARGIN + JOYSTICK_BASE_RADIUS); 
 
@@ -201,7 +198,7 @@ function draw() {
     // Joystick knop (binnenste cirkel)
     ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
     ctx.beginPath();
-    // Gebruik de berekende offsets voor de knop
+    // Gebruik de berekende offsets om de knop te laten bewegen
     ctx.arc(stickX + joystick.stickOffsetX, stickY + joystick.stickOffsetY, 30, 0, Math.PI * 2);
     ctx.fill();
 
