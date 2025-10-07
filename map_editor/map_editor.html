@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>2D Game Map Editor</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #333; }
+        #editorCanvas { display: block; background-color: #99CC99; border: 1px solid #000; }
+        #controls { 
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            width: 100%; 
+            padding: 10px; 
+            background: rgba(0, 0, 0, 0.8); 
+            color: white; 
+            font-family: Arial, sans-serif;
+            box-sizing: border-box;
+            z-index: 10;
+        }
+        #controls button { padding: 10px 15px; margin-right: 10px; }
+        #jsonOutput { width: 100%; height: 80px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+    <canvas id="editorCanvas"></canvas>
+
+    <div id="controls">
+        Map Type: 
+        <select id="objectType">
+            <option value="wall">Muur</option>
+            <option value="item">Item</option>
+            <option value="spawn">Speler Start</option>
+        </select>
+        
+        <button onclick="clearMap()">Wissen</button>
+        <button onclick="downloadJSON()">JSON Downloaden</button>
+        
+        <label>Laatste Actie: <span id="status">Tik om Objecten te Plaatsen!</span></label>
+        
+        <textarea id="jsonOutput" readonly></textarea>
+    </div>
+
+    <script src="map_editor.js"></script>
+</body>
+</html>
