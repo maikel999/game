@@ -1,40 +1,30 @@
-// ======================================================================
-// 1. Initialisatie en Canvas Setup
-// ======================================================================
+// Test Code om te controleren of Canvas werkt.
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-// --- Canvas Resizing ---
+// Maak de canvas full screen
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
-// Start en pas de grootte aan bij verandering van venster
 resizeCanvas();
 window.addEventListener('resize', resizeCanvas);
 
+// Teken een simpele rode rechthoek in het midden
+function drawTest() {
+    // 1. Wis het scherm
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // 2. Teken een grote rode rechthoek
+    ctx.fillStyle = 'red';
+    ctx.fillRect(50, 50, canvas.width - 100, canvas.height - 100);
 
-// ======================================================================
-// 2. Speldata en Spelobjecten
-// ======================================================================
+    // Roep zichzelf opnieuw aan
+    requestAnimationFrame(drawTest);
+}
 
-// Speler Object
-const player = {
-    worldX: 500,
-    worldY: 500,
-    width: 40,
-    height: 40,
-    speed: 5 // Spelersnelheid
-};
-
-const worldSize = 3000; // Wereldgrootte van 3000x3000
-
-// --- Joystick Setup ---
-const JOYSTICK_MARGIN = 50; // Afstand van de randen
-const JOYSTICK_BASE_RADIUS = 90; // Grootte van de buitenste cirkel
-const JOYSTICK_LIMIT = 50; // Maximale uitslag van de knop
-
-const joystick = {
+// Start de loop
+drawTest();const joystick = {
     active: false,
     inputX: 0, // Richting op X-as (-1.0 tot 1.0)
     inputY: 0, // Richting op Y-as (-1.0 tot 1.0)
