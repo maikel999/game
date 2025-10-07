@@ -3,22 +3,23 @@
 <head>
     <title>2D Top-Down Game</title>
     <style>
-    /* Zorgt ervoor dat de browserbalken en marges verdwijnen */
-    html, body {
-        height: 100%;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        overflow: hidden; /* Voorkomt scrollbalken */
-        background-color: #000;
-    }
-    canvas {
-        display: block; /* Essentieel om witruimte te voorkomen */
-    }
+        /* BELANGRIJK: Zorgt dat alles de hele viewport vult */
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; 
+            background-color: #000;
+        }
+        canvas {
+            display: block; /* Voorkomt een klein wit randje */
+        }
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas"></canvas>
-    <script src="game.js"></script>
+    <canvas id="gameCanvas"></canvas> 
+    
+    <script src="game.js"></script> 
 </body>
 </html>
