@@ -58,7 +58,3 @@ Om dit project lokaal uit te voeren en te bewerken:
     ```
 2.  **Start een Lokale Server:** Vanwege CORS-beperkingen is het nodig om een lokale HTTP-server te gebruiken. Gebruik bijvoorbeeld de "Live Server" extensie in VS Code of de Python Simple HTTP Server.
 3.  **Map Editor:** Gebruik `map_editor/map_editor.html` om wijzigingen aan te brengen, download de nieuwe `map_data.json` en plaats deze in de map `/maps`.
-<a href="https://maikel999.github.io/game/">Game</a>
-
-<a href="https://maikel999.github.io/game/map_editor/map_editor.html">map editor</a>
-
