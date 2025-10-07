@@ -12,7 +12,7 @@ let gameReady = false; // Vlag om Game Loop te starten
 let playerSprites = {
     walk: new Image(),
     run: new Image(),
-    // Toekomst: idle: new Image(),
+    idle: new Image(),
 };
 
 // Stel de bronbestanden in (Zorg dat de namen EXACT overeenkomen!)
@@ -183,8 +183,12 @@ function update() {
         // Kies de juiste spritesheet: nu gebruiken we altijd 'walk'
         player.currentSheet = playerSprites.walk; 
     }
-    // Toekomst: ELSE zou playerSprites.idle kunnen gebruiken.
-
+    else {
+        player.currentSheet = playerSprites.idle; // <-- Gebruik idle als niet beweegt
+        // Optioneel: reset frameX als je wilt dat de idle animatie altijd bij 0 begint
+        player.frameX = 0; 
+    }
+    
     // --- 2. Frame Animatie Timer ---
     player.animationTimer++;
     if (player.animationTimer >= player.animationSpeed) {
@@ -333,6 +337,7 @@ async function loadGame() {
         await Promise.all([
             new Promise(resolve => playerSprites.walk.onload = resolve),
             new Promise(resolve => playerSprites.run.onload = resolve),
+            new Promise(resolve => playerSprites.idle.onload = resolve),
         ]);
 
         // Alles is klaar, start het spel!
