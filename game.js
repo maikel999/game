@@ -53,8 +53,8 @@ const TILE_SIZE = 64; // Grootte voor achtergrondtegels
 const player = {
     worldX: 0,
     worldY: 0, 
-    width: 200,
-    height: 200,
+    width: 32, //200,
+    height: 40, //200,
     speed: 5,
     
     // ANIMATIE VARIABELEN
