@@ -1,21 +1,49 @@
 [
   {
+    "type": "wall_h",
+    "x": 320,
+    "y": 320,
+    "width": 64,
+    "height": 64
+  },
+  {
     "type": "spawn",
     "x": 448,
-    "y": 256,
+    "y": 192,
     "width": 128,
     "height": 128
   },
   {
-    "type": "wall_h",
-    "x": 128,
+    "type": "wall_v",
+    "x": 192,
     "y": 512,
     "width": 64,
     "height": 64
   },
   {
-    "type": "wall_h",
+    "type": "wall_v",
     "x": 192,
+    "y": 448,
+    "width": 64,
+    "height": 64
+  },
+  {
+    "type": "wall_v",
+    "x": 192,
+    "y": 384,
+    "width": 64,
+    "height": 64
+  },
+  {
+    "type": "wall_v",
+    "x": 192,
+    "y": 320,
+    "width": 64,
+    "height": 64
+  },
+  {
+    "type": "wall_v",
+    "x": 256,
     "y": 512,
     "width": 64,
     "height": 64
@@ -42,30 +70,23 @@
     "height": 64
   },
   {
-    "type": "wall_v",
-    "x": 128,
+    "type": "wall_h",
+    "x": 448,
+    "y": 512,
+    "width": 64,
+    "height": 64
+  },
+  {
+    "type": "wall_h",
+    "x": 512,
     "y": 448,
     "width": 64,
     "height": 64
   },
   {
-    "type": "wall_v",
-    "x": 128,
-    "y": 384,
-    "width": 64,
-    "height": 64
-  },
-  {
-    "type": "wall_v",
-    "x": 128,
-    "y": 320,
-    "width": 64,
-    "height": 64
-  },
-  {
-    "type": "wall_v",
-    "x": 128,
-    "y": 256,
+    "type": "wall_h",
+    "x": 512,
+    "y": 512,
     "width": 64,
     "height": 64
   }
