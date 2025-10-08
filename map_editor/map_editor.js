@@ -16,20 +16,20 @@ canvas.height = WORLD_HEIGHT;
 // --- ASSET CONFIGURATIE (Centrale lijst van alle objecten) ---
 const ASSET_CONFIG = [
     // Achtergrond
-    { type: 'background', path: 'images/tile_grass.png', category: 'tile', default_size: TILE_SIZE },
+    { type: 'background', path: '../images/tile_grass.png', category: 'tile', default_size: TILE_SIZE },
 
     // Muren (Collision Objecten)
-    { type: 'wall_h', path: 'images/Wooden_Fence_Horizontal.png', category: 'wall', default_size: TILE_SIZE },
-    { type: 'wall_v', path: 'images/Wooden_Fence_Vertical.png', category: 'wall', default_size: TILE_SIZE },
+    { type: 'wall_h', path: '../images/Wooden_Fence_Horizontal.png', category: 'wall', default_size: TILE_SIZE },
+    { type: 'wall_v', path: '../images/Wooden_Fence_Vertical.png', category: 'wall', default_size: TILE_SIZE },
 
     // Decoratie (Zal nu worden geëxporteerd in de JSON)
-    { type: 'tree_small', path: 'images/Tree_Small.png', category: 'decoration', default_size: TILE_SIZE },
-    { type: 'tree_medium', path: 'images/Tree_Medium.png', category: 'decoration', default_size: TILE_SIZE },
-    { type: 'tree_large', path: 'images/Tree_Large.png', category: 'decoration', default_size: TILE_SIZE * 2 }, // Grote boom is 2x2 tegels
+    { type: 'tree_small', path: '../images/Tree_Small.png', category: 'decoration', default_size: TILE_SIZE },
+    { type: 'tree_medium', path: '../images/Tree_Medium.png', category: 'decoration', default_size: TILE_SIZE },
+    { type: 'tree_large', path: '../images/Tree_Large.png', category: 'decoration', default_size: TILE_SIZE * 2 }, // Grote boom is 2x2 tegels
 
     // Speciale objecten
-    { type: 'spawn', path: 'images/tile_spawn.png', category: 'special', default_size: TILE_SIZE },
-    //{ type: 'item', path: 'images/tile_item.png', category: 'item', default_size: TILE_SIZE },
+    { type: 'spawn', path: '../images/tile_spawn.png', category: 'special', default_size: TILE_SIZE },
+    //{ type: 'item', path: '../images/tile_item.png', category: 'item', default_size: TILE_SIZE },
 ];
 
 // --- GELADEN ASSETS ---
