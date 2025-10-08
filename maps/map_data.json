@@ -1,4 +1,11 @@
 [
+   {
+    "type": "tree_large",
+    "x": 256,
+    "y": 320,
+    "width": 128,
+    "height": 128
+  },
   {
     "type": "wall_h",
     "x": 320,
