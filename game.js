@@ -55,7 +55,7 @@ const player = {
     worldY: 0, 
     width: 32, //200,
     height: 40, //200,
-    displaySize: 64, // Zorgt ervoor dat de speler opvalt
+    displaySize: 200, // Zorgt ervoor dat de speler opvalt
     speed: 5,
     
     // ANIMATIE VARIABELEN
