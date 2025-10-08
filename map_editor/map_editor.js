@@ -28,7 +28,7 @@ const ASSET_CONFIG = [
     { type: 'tree_large', path: '../images/Tree_Large.png', category: 'decoration', default_size: TILE_SIZE * 2 }, // Dubbele grootte voor large tree
 
     // Speciale objecten
-    { type: 'spawn', path: '../images/tile_spawn.png', category: 'special', default_size: TILE_SIZE * 2 },
+    { type: 'spawn', path: '../images/tile_spawn.png', category: 'special', default_size: TILE_SIZE },
    // { type: 'item', path: '../images/tile_item.png', category: 'item', default_size: TILE_SIZE },
    // { type: 'rock_large', path: 'images/rock_large.png', category: 'decoration', default_size: TILE_SIZE },
     
