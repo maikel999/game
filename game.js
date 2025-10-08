@@ -7,18 +7,32 @@ const ctx = canvas.getContext('2d');
 // --- Spel Assets en Data ---
 let MAP_OBJECTS = []; // Map data wordt hierin geladen
 let gameReady = false; // Vlag om Game Loop te starten
+const worldSize = 3000; 
 
-// Laad alle spritesheets
+// --- OMGEVINGS ASSET CONFIG (Definieert alle omgevingsafbeeldingen) ---
+const ENV_ASSET_CONFIG = [
+    { type: 'background', path: 'images/tile_grass.png', collides: false },
+    { type: 'wall_h', path: 'images/Wooden_Fence_Horizontal.png', collides: true },
+    { type: 'wall_v', path: 'images/Wooden_Fence_Vertical.png', collides: true },
+    { type: 'tree_small', path: 'images/Tree_Small.png', collides: true },
+    { type: 'tree_medium', path: 'images/Tree_Medium.png', collides: true },
+    { type: 'tree_large', path: 'images/Tree_Large.png', collides: true }, 
+    { type: 'spawn', path: '', collides: false }, 
+    { type: 'item', path: 'images/tile_item.png', collides: false },
+];
+
+const envImages = {}; // Container voor de geladen omgevingsafbeeldingen
+
+// --- Speler Spritesheets ---
 let playerSprites = {
     walk: new Image(),
     run: new Image(),
     idle: new Image(),
 };
-
-// Stel de bronbestanden in (Zorg dat de namen EXACT overeenkomen!)
 playerSprites.walk.src = 'images/Swordsman_lvl1_Walk_with_shadow.png';
 playerSprites.run.src = 'images/Swordsman_lvl1_Run_with_shadow.png';
 playerSprites.idle.src = 'images/Swordsman_lvl1_Idle_with_shadow.png';
+
 
 // --- Canvas Resizing ---
 function resizeCanvas() {
@@ -33,6 +47,8 @@ window.addEventListener('resize', resizeCanvas);
 // 2. Speldata en Spelobjecten
 // ======================================================================
 
+const TILE_SIZE = 64; // Grootte voor achtergrondtegels
+
 // Speler Object
 const player = {
     worldX: 0,
@@ -42,17 +58,16 @@ const player = {
     speed: 5,
     
     // ANIMATIE VARIABELEN
-    frameX: 0, // Huidige kolom van het frame (0 tot 3)
-    frameY: 0, // Huidige rij van de richting (0: Omlaag, 1: Links, 2: Rechts, 3: Omhoog)
-    frameWidth: 64, // Breedte van één frame op de spritesheet
-    frameHeight: 64, // Hoogte van één frame op de spritesheet
+    frameX: 0,
+    frameY: 0,
+    frameWidth: 64, 
+    frameHeight: 64, 
     animationTimer: 0,
-    animationSpeed: 5, // Hoe lager, hoe sneller de animatie (frames per update)
+    animationSpeed: 5, 
     isMoving: false,
-    currentSheet: playerSprites.walk, // De momenteel gebruikte spritesheet
+    currentSheet: playerSprites.walk, 
+    maxFrames: 4, // Standaard voor walk/run
 };
-
-const worldSize = 3000; 
 
 // --- Joystick Setup ---
 const JOYSTICK_MARGIN = 150; 
@@ -71,12 +86,12 @@ const joystick = {
 
 
 // ======================================================================
-// 3. Input Handlers (Joystick)
+// 3. Input Handlers (Joystick) - Blijven hetzelfde
 // ======================================================================
 
 function handleInput(e) {
     e.preventDefault(); 
-    if (!gameReady) return; // Negeer input voordat het spel is geladen
+    if (!gameReady) return; 
 
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
@@ -133,7 +148,7 @@ canvas.addEventListener('touchend', handleEnd);
 // ======================================================================
 
 /**
- * Controleert op botsingen met muur-objecten.
+ * Controleert op botsingen met alle collides: true objecten in de map.
  */
 function checkCollision(x, y, width, height) {
     const playerLeft = x - width / 2;
@@ -142,17 +157,20 @@ function checkCollision(x, y, width, height) {
     const playerBottom = y + height / 2;
 
     for (const obj of MAP_OBJECTS) {
-        if (obj.type === 'wall') {
-            const wallLeft = obj.x;
-            const wallRight = obj.x + obj.width;
-            const wallTop = obj.y;
-            const wallBottom = obj.y + obj.height;
+        const config = ENV_ASSET_CONFIG.find(c => c.type === obj.type);
+        
+        // Controleer alleen objecten die botsing hebben
+        if (config && config.collides) {
+            const objLeft = obj.x;
+            const objRight = obj.x + obj.width;
+            const objTop = obj.y;
+            const objBottom = obj.y + obj.height;
 
             if (
-                playerRight > wallLeft &&
-                playerLeft < wallRight &&
-                playerBottom > wallTop &&
-                playerTop < wallBottom
+                playerRight > objLeft &&
+                playerLeft < objRight &&
+                playerBottom > objTop &&
+                playerTop < objBottom
             ) {
                 return true; 
             }
@@ -169,31 +187,27 @@ function update() {
     const inputX = joystick.inputX;
     const inputY = joystick.inputY;
 
-    // --- 1. Richting en Beweging Bepalen ---
+    // --- 1. Richting en Beweging/Idle Status Bepalen ---
     player.isMoving = (inputX !== 0 || inputY !== 0);
 
     if (player.isMoving) {
-        // Bepaal de kijkrichting (frameY)
-        if (Math.abs(inputX) > Math.abs(inputY)) {
-            player.frameY = (inputX < 0) ? 1 : 2; // 1: Links, 2: Rechts
-        } else {
-            player.frameY = (inputY < 0) ? 3 : 0; // 3: Omhoog, 0: Omlaag
-        }
-        
-        // Kies de juiste spritesheet: nu gebruiken we altijd 'walk'
         player.currentSheet = playerSprites.walk; 
-    }
-    else {
-        player.currentSheet = playerSprites.idle; // <-- Gebruik idle als niet beweegt
-        // Optioneel: reset frameX als je wilt dat de idle animatie altijd bij 0 begint
-        player.frameX = 0; 
+        player.maxFrames = 4;
+        
+        if (Math.abs(inputX) > Math.abs(inputY)) {
+            player.frameY = (inputX < 0) ? 1 : 2; 
+        } else {
+            player.frameY = (inputY < 0) ? 3 : 0; 
+        }
+    } else {
+        player.currentSheet = playerSprites.idle; 
+        player.maxFrames = 8; // Idle heeft meer frames
     }
     
     // --- 2. Frame Animatie Timer ---
     player.animationTimer++;
     if (player.animationTimer >= player.animationSpeed) {
-        // 4 frames per rij op de spritesheet
-        player.frameX = (player.frameX + 1) % 4; 
+        player.frameX = (player.frameX + 1) % player.maxFrames; 
         player.animationTimer = 0;
     }
 
@@ -220,7 +234,6 @@ function update() {
 
 function draw() {
     if (!gameReady) {
-        // Teken een laadscherm of wacht tot de data er is
         ctx.fillStyle = 'white';
         ctx.font = '24px Arial';
         ctx.textAlign = 'center';
@@ -237,26 +250,33 @@ function draw() {
     const cameraX = player.worldX - (canvas.width / 2);
     const cameraY = player.worldY - (canvas.height / 2);
 
+    // Haal de achtergrondtegel op
+    const backgroundTile = envImages.background;
 
     // --- TEKEN DE WERELD EN OBJECTEN ---
 
-    // Achtergrond (hele speelgebied)
-    ctx.fillStyle = '#99CC99'; 
-    ctx.fillRect(0 - cameraX, 0 - cameraY, worldSize, worldSize);
+    // 1. Achtergrond (hele speelgebied getegeld)
+    if (backgroundTile) {
+        for (let x = 0; x < worldSize; x += TILE_SIZE) {
+            for (let y = 0; y < worldSize; y += TILE_SIZE) {
+                ctx.drawImage(backgroundTile, x - cameraX, y - cameraY, TILE_SIZE, TILE_SIZE);
+            }
+        }
+    } else {
+        // Fallback
+        ctx.fillStyle = '#99CC99'; 
+        ctx.fillRect(0 - cameraX, 0 - cameraY, worldSize, worldSize);
+    }
     
-    // Teken alle objecten (Muren, Items, etc.)
+    // 2. Teken alle objecten (Muren, Bomen, etc.)
     MAP_OBJECTS.forEach(obj => {
-        const screenX = obj.x - cameraX;
-        const screenY = obj.y - cameraY;
-
-        if (obj.type === 'wall') {
-            ctx.fillStyle = '#666666'; 
-            ctx.fillRect(screenX, screenY, obj.width, obj.height);
-        } else if (obj.type === 'item') {
-            ctx.fillStyle = 'gold'; 
-            ctx.beginPath();
-            ctx.arc(screenX + obj.width / 2, screenY + obj.height / 2, obj.width / 2, 0, Math.PI * 2);
-            ctx.fill();
+        const img = envImages[obj.type];
+        
+        if (img) {
+            const screenX = obj.x - cameraX;
+            const screenY = obj.y - cameraY;
+            
+            ctx.drawImage(img, screenX, screenY, obj.width, obj.height);
         }
     });
 
@@ -267,34 +287,31 @@ function draw() {
     if (player.currentSheet.complete) {
         ctx.drawImage(
             player.currentSheet, 
-            player.frameX * player.frameWidth,   // sx
-            player.frameY * player.frameHeight,  // sy
-            player.frameWidth,                   // sWidth
-            player.frameHeight,                  // sHeight
-            playerScreenX,                       // dx
-            playerScreenY,                       // dy
-            player.width,                        // dWidth
-            player.height                        // dHeight
+            player.frameX * player.frameWidth,   
+            player.frameY * player.frameHeight,  
+            player.frameWidth,                   
+            player.frameHeight,                  
+            playerScreenX,                       
+            playerScreenY,                       
+            player.width,                        
+            player.height                        
         );
     } else {
-        // Fallback als de afbeelding nog niet is geladen
         ctx.fillStyle = 'red'; 
         ctx.fillRect(playerScreenX, playerScreenY, player.width, player.height);
     }
     
 
-    // --- TEKEN DE STATISCHE UI (Joystick) ---
+    // --- TEKEN DE STATISCHE UI (Joystick) - Blijft hetzelfde ---
     
     const stickX = joystick.baseX;
     const stickY = canvas.height - (JOYSTICK_MARGIN + JOYSTICK_BASE_RADIUS); 
 
-    // Basis cirkel
     ctx.fillStyle = 'rgba(150, 150, 150, 0.4)';
     ctx.beginPath();
     ctx.arc(stickX, stickY, JOYSTICK_BASE_RADIUS, 0, Math.PI * 2);
     ctx.fill();
 
-    // Knop (stick)
     ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
     ctx.beginPath();
     ctx.arc(stickX + joystick.stickOffsetX, stickY + joystick.stickOffsetY, 30, 0, Math.PI * 2);
@@ -322,7 +339,29 @@ async function loadGame() {
         }
         MAP_OBJECTS = await response.json();
         
-        // 2. Zoek Startpunt
+        // 2. Definieer welke afbeeldingen geladen moeten worden
+        const imagePromises = [];
+        
+        // Voeg speler spritesheets toe aan de laadlijst
+        imagePromises.push(new Promise(resolve => playerSprites.walk.onload = resolve));
+        imagePromises.push(new Promise(resolve => playerSprites.run.onload = resolve));
+        imagePromises.push(new Promise(resolve => playerSprites.idle.onload = resolve));
+        
+        // Voeg omgevingsafbeeldingen toe aan de laadlijst
+        ENV_ASSET_CONFIG.forEach(config => {
+            if (config.path) { // Laad alleen als er een pad is gedefinieerd
+                const img = new Image();
+                img.src = config.path;
+                envImages[config.type] = img; // Sla het Image object op
+                imagePromises.push(new Promise(resolve => img.onload = resolve));
+            }
+        });
+
+
+        // 3. Wacht tot ALLE afbeeldingen geladen zijn
+        await Promise.all(imagePromises);
+
+        // 4. Zoek Startpunt
         const spawnPoint = MAP_OBJECTS.find(obj => obj.type === 'spawn');
         if (spawnPoint) {
             player.worldX = spawnPoint.x + (spawnPoint.width / 2);
@@ -333,13 +372,6 @@ async function loadGame() {
             player.worldY = worldSize / 2;
         }
 
-        // 3. Wacht tot afbeeldingen geladen zijn (optioneel, maar goed voor stabiliteit)
-        await Promise.all([
-            new Promise(resolve => playerSprites.walk.onload = resolve),
-            new Promise(resolve => playerSprites.run.onload = resolve),
-            new Promise(resolve => playerSprites.idle.onload = resolve),
-        ]);
-
         // Alles is klaar, start het spel!
         gameReady = true;
         console.log("Game assets en data succesvol geladen!");
@@ -348,12 +380,12 @@ async function loadGame() {
     } catch (error) {
         console.error("Fout tijdens het opstarten van het spel:", error);
         
-        // Toon fout op het canvas als er iets misging
+        // Toon fout op het canvas
         ctx.fillStyle = 'red';
         ctx.font = '20px Arial';
         ctx.textAlign = 'left';
         ctx.fillText("FATALE FOUT: Zie console voor details.", 50, 50);
-        ctx.fillText("1. Lokale server? 2. map_data.json in /maps? 3. player.png in /images?", 50, 80);
+        ctx.fillText("1. Map data laden mislukt? 2. Afbeelding paden onjuist?", 50, 80);
     }
 }
 
