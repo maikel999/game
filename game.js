@@ -18,7 +18,7 @@ const ENV_ASSET_CONFIG = [
     { type: 'tree_medium', path: 'images/Tree_Medium.png', collides: true },
     { type: 'tree_large', path: 'images/Tree_Large.png', collides: true }, 
     { type: 'spawn', path: '', collides: false }, 
-    { type: 'item', path: 'images/tile_item.png', collides: false },
+   // { type: 'item', path: 'images/tile_item.png', collides: false },
 ];
 
 const envImages = {}; // Container voor de geladen omgevingsafbeeldingen
