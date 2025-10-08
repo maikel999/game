@@ -55,6 +55,7 @@ const player = {
     worldY: 0, 
     width: 32, //200,
     height: 40, //200,
+    displaySize: 64, // Zorgt ervoor dat de speler opvalt
     speed: 5,
     
     // ANIMATIE VARIABELEN
@@ -281,25 +282,31 @@ function draw() {
     });
 
     // --- TEKEN DE SPELER (met Animatie) ---
-    const playerScreenX = (canvas.width / 2) - (player.width / 2);
-    const playerScreenY = (canvas.height / 2) - (player.height / 2);
+    const playerScreenX = (canvas.width / 2) - (player.displaySize / 2);
+    const playerScreenY = (canvas.height / 2) - (player.displaySize / 2);
 
     if (player.currentSheet.complete) {
-        ctx.drawImage(
-            player.currentSheet, 
-            player.frameX * player.frameWidth,   
-            player.frameY * player.frameHeight,  
-            player.frameWidth,                   
-            player.frameHeight,                  
-            playerScreenX,                       
-            playerScreenY,                       
-            player.width,                        
-            player.height                        
-        );
+      ctx.drawImage(
+        player.currentSheet, 
+        player.frameX * player.frameWidth,   
+        player.frameY * player.frameHeight,  
+        player.frameWidth,                   
+        player.frameHeight,                  
+        playerScreenX,                       
+        playerScreenY,                       
+        player.displaySize,                  // dWidth = displaySize
+        player.displaySize                   // dHeight = displaySize
+      );
     } else {
+        // De fallback gebruikt ook de grotere displaygrootte
         ctx.fillStyle = 'red'; 
-        ctx.fillRect(playerScreenX, playerScreenY, player.width, player.height);
-    }
+        ctx.fillRect(
+          playerScreenX, 
+          playerScreenY, 
+          player.displaySize, 
+          player.displaySize
+         );
+      }
     
 
     // --- TEKEN DE STATISCHE UI (Joystick) - Blijft hetzelfde ---
