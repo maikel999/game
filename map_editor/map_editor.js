@@ -7,39 +7,36 @@ const objectTypeSelect = document.getElementById('objectType');
 const statusDisplay = document.getElementById('status');
 
 // --- TILE & GAME CONSTANTS ---
-const TILE_SIZE = 64; // Stel een geschikte grootte in, bijv. 64x64
+const TILE_SIZE = 64; // Grootte van het raster en de meeste objecten
 const WORLD_WIDTH = 1280; 
 const WORLD_HEIGHT = 960; 
 canvas.width = WORLD_WIDTH;
 canvas.height = WORLD_HEIGHT;
 
-// --- ASSET CONFIGURATIE (DIT MOET JE AANPASSEN VOOR NIEUWE OBJECTEN) ---
+// --- ASSET CONFIGURATIE (Centrale lijst van alle objecten) ---
 const ASSET_CONFIG = [
-    // Achtergrond (Wordt getegeld in de draw functie)
-    { type: 'background', path: '../images/tile_grass.png', category: 'tile', default_size: TILE_SIZE },
+    // Achtergrond
+    { type: 'background', path: 'images/tile_grass.png', category: 'tile', default_size: TILE_SIZE },
 
     // Muren (Collision Objecten)
-    { type: 'wall_h', path: '../images/Wooden_Fence_Horizontal.png', category: 'wall', default_size: TILE_SIZE },
-    { type: 'wall_v', path: '../images/Wooden_Fence_Vertical.png', category: 'wall', default_size: TILE_SIZE },
+    { type: 'wall_h', path: 'images/Wooden_Fence_Horizontal.png', category: 'wall', default_size: TILE_SIZE },
+    { type: 'wall_v', path: 'images/Wooden_Fence_Vertical.png', category: 'wall', default_size: TILE_SIZE },
 
-    // Decoratie (Geen Collision, tenzij je dat later toevoegt)
-    { type: 'tree_small', path: '../images/Tree_Small.png', category: 'decoration', default_size: TILE_SIZE },
-    { type: 'tree_medium', path: '../images/Tree_Medium.png', category: 'decoration', default_size: TILE_SIZE },
-    { type: 'tree_large', path: '../images/Tree_Large.png', category: 'decoration', default_size: TILE_SIZE * 2 }, // Dubbele grootte voor large tree
+    // Decoratie (Zal nu worden geëxporteerd in de JSON)
+    { type: 'tree_small', path: 'images/Tree_Small.png', category: 'decoration', default_size: TILE_SIZE },
+    { type: 'tree_medium', path: 'images/Tree_Medium.png', category: 'decoration', default_size: TILE_SIZE },
+    { type: 'tree_large', path: 'images/Tree_Large.png', category: 'decoration', default_size: TILE_SIZE * 2 }, // Grote boom is 2x2 tegels
 
     // Speciale objecten
-    { type: 'spawn', path: '../images/tile_spawn.png', category: 'special', default_size: TILE_SIZE },
-   // { type: 'item', path: '../images/tile_item.png', category: 'item', default_size: TILE_SIZE },
-   // { type: 'rock_large', path: 'images/rock_large.png', category: 'decoration', default_size: TILE_SIZE },
-    
+    { type: 'spawn', path: 'images/tile_spawn.png', category: 'special', default_size: TILE_SIZE },
+    //{ type: 'item', path: 'images/tile_item.png', category: 'item', default_size: TILE_SIZE },
 ];
 
 // --- GELADEN ASSETS ---
-const tileImages = {}; // Hier slaan we de geladen Image objecten op (bijv. tileImages['wall_h'])
+const tileImages = {}; // Hier slaan we de geladen Image objecten op
 let assetsLoaded = false;
 let imagesToLoad = ASSET_CONFIG.length;
 let imagesLoaded = 0;
-
 
 // Array om alle objecten op te slaan
 let mapObjects = [];
@@ -49,7 +46,7 @@ let mapObjects = [];
 // ======================================================================
 
 function initializeEditor() {
-    // 1. Vul de objectType dropdown
+    // 1. Vul de objectType dropdown automatisch
     ASSET_CONFIG.filter(config => config.type !== 'background').forEach(config => {
         const option = document.createElement('option');
         option.value = config.type;
@@ -73,7 +70,7 @@ function initializeEditor() {
             console.error(`Fout bij het laden van afbeelding: ${img.src}`);
         };
         
-        // Sla het geladen Image object op met de type-naam
+        // Sla het geladen Image object op
         tileImages[config.type] = img;
     });
 
@@ -97,7 +94,6 @@ function draw() {
         return;
     }
 
-    // Haal de achtergrondtegel op
     const backgroundTile = tileImages.background;
 
     // 1. Teken de Getegelde Achtergrond
@@ -114,7 +110,6 @@ function draw() {
         if (img) {
             ctx.drawImage(img, obj.x, obj.y, obj.width, obj.height);
         } else {
-            // Fallback voor onbekende types (dit zou niet mogen gebeuren)
             ctx.fillStyle = 'purple';
             ctx.fillRect(obj.x, obj.y, obj.width, obj.height);
         }
@@ -155,19 +150,11 @@ function handlePlacement(e) {
     const type = objectTypeSelect.value;
     const config = ASSET_CONFIG.find(c => c.type === type);
 
-    if (!config) return; // Stop als type niet gevonden is
+    if (!config) return;
 
-    // Plaatsing met snapping op basis van TILE_SIZE
+    // Plaatsing snapt altijd aan het TILE_SIZE raster
     let x = Math.floor(rawX / TILE_SIZE) * TILE_SIZE;
     let y = Math.floor(rawY / TILE_SIZE) * TILE_SIZE;
-
-    // Als de tegel groter is dan 1x1 (bv. Tree_Large), centreren we de klik
-    // Zodat de linkerbovenhoek van het object op het raster staat
-    if (config.default_size > TILE_SIZE) {
-        // Zorgt ervoor dat grote objecten nog steeds op het TILE_SIZE raster snappen
-        x = Math.floor(rawX / TILE_SIZE) * TILE_SIZE;
-        y = Math.floor(rawY / TILE_SIZE) * TILE_SIZE;
-    }
     
     let newObject = { 
         type: type, 
@@ -182,7 +169,7 @@ function handlePlacement(e) {
         mapObjects = mapObjects.filter(obj => obj.type !== 'spawn');
     }
 
-    // Voorkom dubbele plaatsing op dezelfde locatie (alleen voor 1x1 objecten)
+    // Voorkom dubbele plaatsing op dezelfde locatie
     const alreadyExists = mapObjects.some(obj => obj.x === x && obj.y === y && obj.type === type);
     
     if (!alreadyExists || type === 'spawn') {
@@ -211,13 +198,23 @@ function clearMap() {
 }
 
 function downloadJSON() {
-    const collidableObjects = mapObjects.filter(obj => {
+    // Exporteer ALLES behalve de 'background' tegel
+    const exportedObjects = mapObjects.filter(obj => {
         const config = ASSET_CONFIG.find(c => c.type === obj.type);
-        // We filteren alleen op objecten die een interactie in het spel hebben (geen decoratie)
-        return config && (config.category === 'wall' || config.category === 'special' || config.category === 'item');
+        return config && config.type !== 'background';
     });
     
-    const jsonString = JSON.stringify(collidableObjects, null, 2);
+    // Optionele sortering
+    exportedObjects.sort((a, b) => {
+        const priority = (type) => {
+            if (type === 'spawn') return 0;
+            if (type.startsWith('wall')) return 1;
+            return 2; 
+        };
+        return priority(a.type) - priority(b.type);
+    });
+    
+    const jsonString = JSON.stringify(exportedObjects, null, 2);
     const blob = new Blob([jsonString], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     
@@ -229,7 +226,7 @@ function downloadJSON() {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
     
-    statusDisplay.textContent = "map_data.json gedownload. Kopieer ook de tekst!";
+    statusDisplay.textContent = "map_data.json gedownload. Alle objecten (incl. decoratie) geëxporteerd.";
 }
 
 // Start het laad- en initialisatieproces
